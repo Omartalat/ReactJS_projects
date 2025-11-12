@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { calculateInvestmentResults } from "../util/investment";
+import { calculateInvestmentResults, formatter } from "../util/investment";
 
 export default function UserInput() {
   const [investmenData, setInvestmentData] = useState({
@@ -14,56 +14,76 @@ export default function UserInput() {
 
     setInvestmentData((prevInvestmentData) => ({
       ...prevInvestmentData,
-      [name]: value,
+      [name]: +value,
     }));
   }
   const annualData = calculateInvestmentResults(investmenData);
 
+  console.log(annualData);
+
   return (
     <>
-      <div className="input-group">
-        <div id="user-input">
-          <label htmlFor="initial_investment">Initial Investment</label>
-          <input
-            id="initial_investment"
-            type="number"
-            name="initialInvestment"
-            onChange={handleChange}
-          />
-
-          <label htmlFor="annual_investment">Annual Investment</label>
-          <input
-            id="annual_investment"
-            type="number"
-            name="annualInvestment"
-            onChange={handleChange}
-          />
-
-          <label htmlFor="expected_return">Expected Return</label>
-          <input
-            id="expected_return"
-            type="number"
-            name="expectedReturn"
-            onChange={handleChange}
-          />
-
-          <label htmlFor="duration">Duration</label>
-          <input
-            id="duration"
-            type="number"
-            name="duration"
-            onChange={handleChange}
-          />
+      <section id="user-input">
+        <div className="input-group">
+          <p>
+            <label htmlFor="initial_investment">Initial Investment</label>
+            <input
+              id="initial_investment"
+              type="number"
+              name="initialInvestment"
+              onChange={handleChange}
+            />
+          </p>
+          <p>
+            <label htmlFor="annual_investment">Annual Investment</label>
+            <input
+              id="annual_investment"
+              type="number"
+              name="annualInvestment"
+              onChange={handleChange}
+            />
+          </p>
+          <p>
+            <label htmlFor="expected_return">Expected Return</label>
+            <input
+              id="expected_return"
+              type="number"
+              name="expectedReturn"
+              onChange={handleChange}
+            />
+          </p>
+          <p>
+            <label htmlFor="duration">Duration</label>
+            <input
+              id="duration"
+              type="number"
+              name="duration"
+              onChange={handleChange}
+            />
+          </p>
         </div>
-      </div>
+      </section>
       <table id="result">
-        <tr>
-          <th>Year</th>
-          <th>Ivestment Value</th>
-          <th>Interest (Year)</th>
-          <th>Total Interest</th>
-          <th>Invested Capital</th>
-        </tr>
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Ivestment Value</th>
+            <th>Interest (Year)</th>
+            <th>Total Interest</th>
+            <th>Invested Capital</th>
+          </tr>
+        </thead>
+        <tbody>{annualData.map((yearData) => {
+          const totalInterest = yearData.valueEndOfYear -yearData.annualInvestment * yearData.year
+          const totalInvested = yearData.valueEndOfYear - totalInterest
+          return (<tr key={yearData.year}>
+            <td>{yearData.year}</td>
+            <td>{formatter.format(yearData.valueEndOfYear)}</td>
+            <td>{formatter.format(yearData.interest)}</td>
+            <td>{formatter.format(totalInterest)}</td>
+            <td>{formatter.format(totalInvested)}</td>
+          </tr>)
+        })}</tbody>
       </table>
     </>
   );
