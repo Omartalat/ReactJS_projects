@@ -3,6 +3,11 @@ import QuizOverview from "./components/QuizOverview";
 import { QuizContext } from "./store/QuizContext";
 
 function App() {
+
+  function handleCorrect() {
+    
+  }
+
   const valueCtx = {
     skipped: 0,
     correct: 0,
