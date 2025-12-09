@@ -1,4 +1,5 @@
 import Progress from "./components/Progress";
+import QuizOverview from "./components/QuizOverview";
 
 function App() {
   return (
@@ -7,7 +8,14 @@ function App() {
         <img src="quiz-logo.png" alt="quiz logo" />
         <h1>ReactQuiz</h1>
       </header>
-      <Progress />
+      <div id="quiz">
+        <span id="question-overview">
+          <span id="question">
+            <Progress />
+            <QuizOverview />
+          </span>
+        </span>
+      </div>
     </>
   );
 }
