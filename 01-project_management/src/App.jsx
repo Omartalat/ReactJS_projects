@@ -4,21 +4,29 @@ import CreateProjectPage from "./components/CreateProjectPage";
 import { useState } from "react";
 
 function App() {
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState({
+    selectedProjectId: undefined,
+    projects: [],
+  });
   const [createProjectState, setCreateProjectState] = useState(false);
+
+  function handleAddProject() {
+    setCreateProjectState(true);
+    setProjects((prev) => {
+      return {
+        ...prev,
+        selectedProjectId: null,
+      };
+    });
+  }
+
   return (
     <main className="h-screen flex gap-8">
-      <Sidebar
-        projects={projects}
-        setCreateProjectState={setCreateProjectState}
-      />
-
+      <Sidebar handleAddProject={handleAddProject} projects={projects} />
       {createProjectState ? (
         <CreateProjectPage projects={projects} setProjects={setProjects} />
       ) : (
-        <DefaultPage
-          setCreateProjectState={setCreateProjectState}
-        />
+        <DefaultPage handleAddProject={handleAddProject} />
       )}
     </main>
   );
