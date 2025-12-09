@@ -1,6 +1,10 @@
 import { useRef } from "react";
 
-export default function CreateProjectPage({ projects, setProjects }) {
+export default function CreateProjectPage({
+  userProjects,
+  setUserProjects,
+  setCreateProjectState,
+}) {
   const title = useRef();
   const description = useRef();
   const dueDate = useRef();
@@ -13,8 +17,10 @@ export default function CreateProjectPage({ projects, setProjects }) {
       dueDate: dueDate.current.value,
       tasks: [],
     };
-    const newProjects = [...projects, newProject];
-    setProjects(newProjects);
+    setUserProjects((prev) => {
+      return [...prev, newProject];
+    });
+    setCreateProjectState(false);
   }
   return (
     <div className="w-full max-w-3xl mx-auto mt-16 px-8">
