@@ -21,20 +21,19 @@ export default function ProjectPage({
     );
   }
 
-  function handleDeleteProject () {
-    setUserProjects(prev => 
-      prev.filter(proj => proj.id !== id)
-    )
-    setSelectedProjectId(null)
+  function handleDeleteProject() {
+    setUserProjects((prev) => prev.filter((proj) => proj.id !== id));
+    setSelectedProjectId(null);
   }
 
   return (
     <div className="w-full max-w-4xl mx-auto p-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-stone-800">{title}</h1>
-        <button 
-        onClick={handleDeleteProject}
-        className="px-6 py-2 rounded-md bg-stone-800 text-stone-50 hover:bg-stone-950">
+        <button
+          onClick={handleDeleteProject}
+          className="px-6 py-2 rounded-md bg-stone-800 text-stone-50 hover:bg-stone-950"
+        >
           Delete
         </button>
       </div>
@@ -65,9 +64,25 @@ export default function ProjectPage({
           return (
             <li
               key={index}
-              className="px-4 py-2 bg-stone-100 text-stone-800 rounded-md border border-stone-300 hover:bg-stone-200 transition-colors"
+              className="px-4 py-2 bg-stone-100 text-stone-800 rounded-md border border-stone-300 hover:bg-stone-200 transition-colors flex justify-between items-center"
             >
-              {task}
+              <span>{task}</span>
+              <button
+                onClick={() => {
+                  const newTasks = tasks.filter((_, i) => i !== index);
+                  const selectedProject = userProjects.find(
+                    (proj) => proj.id === id
+                  );
+                  const updateProject = { ...selectedProject, tasks: newTasks };
+                  setUserProjects((prev) =>
+                    prev.map((proj) => (proj.id === id ? updateProject : proj))
+                  );
+                }}
+                className="ml-2 px-2 py-1 text-xs bg-stone-500 text-white rounded hover:bg-stone-600"
+                aria-label="Delete task"
+              >
+                Delete
+              </button>
             </li>
           );
         })}
