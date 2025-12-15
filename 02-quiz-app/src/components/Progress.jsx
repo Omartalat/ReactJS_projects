@@ -1,16 +1,26 @@
 import { useEffect, useState } from "react";
 
-const TIMER = 10000;
+export default function Progress({ onTimeout }) {
+  const [remainingTime, setRemainingTime] = useState(10000);
 
-export default function Progress() {
-  const [remainingTime, setRemainingTime] = useState(TIMER);
   useEffect(() => {
+    console.log("TIMER STARTED");
     const interval = setInterval(() => {
-      setRemainingTime((prev) => prev - 50);
+      // Prevent negative values for cleanliness
+      setRemainingTime((prev) => Math.max(prev - 50, 0));
     }, 50);
+
     return () => {
       clearInterval(interval);
     };
   }, []);
-  return <progress value={remainingTime} max={TIMER}></progress>;
+
+  useEffect(() => {
+    const timer = setTimeout(onTimeout, 10000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [onTimeout]);
+
+  return <progress value={remainingTime} max={10000} />;
 }
