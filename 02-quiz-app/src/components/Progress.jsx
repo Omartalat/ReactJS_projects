@@ -1,19 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function Progress({ onTimeout }) {
   const [remainingTime, setRemainingTime] = useState(10000);
+  const intervalRef = useRef(null);
 
   useEffect(() => {
     console.log("TIMER STARTED");
-    const interval = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       // Prevent negative values for cleanliness
       setRemainingTime((prev) => Math.max(prev - 50, 0));
     }, 50);
 
     return () => {
-      clearInterval(interval);
+      clearInterval(intervalRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (remainingTime === 0 && intervalRef.current) {
+      console.log("TIMER STOPPED - reached 0");
+      clearInterval(intervalRef.current);
+    }
+  }, [remainingTime]);
 
   useEffect(() => {
     const timer = setTimeout(onTimeout, 10000);
