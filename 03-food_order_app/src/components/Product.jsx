@@ -6,7 +6,9 @@ export default function Product() {
         <h3>product name</h3>
         <p className="meal-item-price">price</p>
         <p className="meal-item-description">description</p>
-        <button className="meal-item-actions">Add to Cart</button>
+        <p className="meal-item-actions">
+          <button className="button">Add to Cart</button>
+        </p>
       </article>
     </div>
   );

@@ -1,5 +1,7 @@
-export default function Modal() {
-  return (
+import { createPortal } from 'react-dom';
+
+export default function CartModal() {
+  return createPortal(
     <dialog className="modal">
       <div className="cart">
         <h2>Your Cart</h2>
@@ -20,6 +22,7 @@ export default function Modal() {
           <button className="button">Go to Checkout</button>
         </div>
       </div>
-    </dialog>
+    </dialog>,
+    document.getElementById('modal')
   );
 }
