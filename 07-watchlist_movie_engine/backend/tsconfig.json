@@ -1,45 +1,22 @@
 {
-  // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
-    // File Layout
-    "rootDir": "./src",
-    // "outDir": "./dist",
-
-    // Environment Settings
-    // See also https://aka.ms/tsconfig/module
-    "module": "NodeNext",
-    "target": "esnext",
-    // "types": [],
-    // For nodejs:
-    // "lib": ["esnext"],
-    "types": ["node"],
-    // and npm install -D @types/node
-
-    // Other Outputs
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-
-    // Stricter Typechecking Options
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-
-    // Style Options
-    // "noImplicitReturns": true,
-    // "noImplicitOverride": true,
-    // "noUnusedLocals": true,
-    // "noUnusedParameters": true,
-    // "noFallthroughCasesInSwitch": true,
-    // "noPropertyAccessFromIndexSignature": true,
-
-    // Recommended Options
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
-    "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force",
-    "skipLibCheck": true
-  }
+    /* 1. Environment & Output */
+    "target": "ES2022",                               /* Generates modern JavaScript for Node.js */
+    "module": "NodeNext",                             /* Critical for "type": "module" in package.json */
+    "moduleResolution": "NodeNext",                   /* Critical for correct import resolutions */
+    "rootDir": "./src",                               /* Where your TS files are */
+    "outDir": "./dist",                               /* Where the compiled JS goes */
+    
+    /* 2. Strict Type-Checking (The "Job-Ready" Standard) */
+    "strict": true,                                   /* Enables all strict type checking options */
+    "noUncheckedIndexedAccess": true,                 /* Prevents crashes when accessing array[index] that doesn't exist */
+    "forceConsistentCasingInFileNames": true,         /* Prevents file name bugs across OS (Windows/Mac) */
+    
+    /* 3. Interop & Build Speed */
+    "esModuleInterop": true,                          /* Allows importing CommonJS packages (like older libs) */
+    "skipLibCheck": true,                             /* Skips type checking of .d.ts files in node_modules (faster build) */
+    "types": ["node"]                                 /* Ensures we only load Node.js types, not DOM/Frontend types */
+  },
+  "include": ["src/**/*"],                            /* Only compile files in the src folder */
+  "exclude": ["node_modules"]                         /* Ignore external libraries */
 }
