@@ -1,12 +1,5 @@
 import mongoose, { Schema, type Document } from "mongoose";
-
-export interface IMovie extends Document {
-  title: string;
-  description: string;
-  rating: number;
-  isWatched: boolean;
-  createdAt: Date;
-}
+import { IMovie } from "../types/index.js";
 
 const MovieSchema: Schema = new Schema(
   {
