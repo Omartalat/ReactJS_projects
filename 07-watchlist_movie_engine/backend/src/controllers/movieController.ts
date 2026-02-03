@@ -33,20 +33,19 @@ export async function addMovie(req: Request, res: Response): Promise<void> {
   }
 }
 
-
 export async function updateMovie(req: Request, res: Response): Promise<void> {
   try {
-    const { movieId, title, description, rating } = req.body;
-
-    if (!movieId) {
+    const { id } = req.params;
+    const { isWatched } = req.body;
+    if (!id) {
       res.status(400).json({ message: "Movie ID is required" });
       return;
     }
 
     const updatedMovie = await Movie.findByIdAndUpdate(
-      movieId,
-      { title, description, rating },
-      { new: true, runValidators: true }
+      id,
+      { isWatched },
+      { new: true, runValidators: true },
     );
 
     if (!updatedMovie) {
@@ -55,6 +54,28 @@ export async function updateMovie(req: Request, res: Response): Promise<void> {
     }
 
     res.status(200).json(updatedMovie);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error });
+  }
+}
+
+export async function deleteMovie(req: Request, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      res.status(400).json({ message: "Movie Id is required" });
+      return;
+    }
+
+    const deletedMovie = await Movie.findByIdAndDelete(id);
+
+    if (!deletedMovie) {
+      res.status(404).json({ message: "Movie not found" });
+      return;
+    }
+
+    res.status(200).json({ message: "Movie deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server Error", error });
   }
