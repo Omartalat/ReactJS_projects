@@ -1,12 +1,42 @@
 import { useEffect, useState } from "react";
 import { type Movie } from "./types";
-import AddMovieModal from "./components/AddMovieModal"
+import AddMovieModal from "./components/AddMovieModal";
 
 function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const handleDelete = async (id: string) => {
+    setMovies(movies.filter((movie) => movie._id !== id));
+
+    try {
+      await fetch(`http://localhost:5000/api/movies/${id}`, {
+        method: "DELETE",
+      });
+    } catch (err) {
+      console.error("Failed to delete");
+    }
+  };
+
+  const handleToggleWatched = async (id: string, currentStatus: boolean) => {
+    setMovies(
+      movies.map((movie) =>
+        movie._id === id ? { ...movie, isWatched: !currentStatus } : movie,
+      ),
+    );
+
+    try {
+      await fetch(`http://localhost:5000/api/movies/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isWatched: !currentStatus }),
+      });
+    } catch (err) {
+      console.error("Failed to update");
+    }
+  };
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -65,41 +95,50 @@ function App() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
           {movies.map((movie) => (
             <div
               key={movie._id}
-              className="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl hover:bg-gray-750 transition-all duration-300 border border-gray-700 group"
+              className="bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-700 group relative"
             >
+              {/* DELETE BUTTON (Hidden by default, shows on hover) */}
+              <button
+                onClick={() => handleDelete(movie._id)}
+                className="absolute top-2 right-2 bg-red-600/80 hover:bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                title="Delete Movie"
+              >
+                🗑️
+              </button>
+
               <div className="p-6">
                 <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-xl font-bold leading-tight group-hover:text-blue-400 transition-colors">
+                  <h3 className="text-xl font-bold leading-tight">
                     {movie.title}
                   </h3>
-                  <span
-                    className={`px-2 py-1 text-xs font-bold rounded uppercase tracking-wider ${
+
+                  {/* TOGGLE BADGE (Clickable now) */}
+                  <button
+                    onClick={() =>
+                      handleToggleWatched(movie._id, movie.isWatched)
+                    }
+                    className={`px-3 py-1 text-xs font-bold rounded-full uppercase tracking-wider transition-colors cursor-pointer border ${
                       movie.isWatched
-                        ? "bg-green-900/60 text-green-400 border border-green-700"
-                        : "bg-yellow-900/60 text-yellow-400 border border-yellow-700"
+                        ? "bg-green-900/40 text-green-400 border-green-700 hover:bg-green-900"
+                        : "bg-yellow-900/40 text-yellow-400 border-yellow-700 hover:bg-yellow-900"
                     }`}
                   >
-                    {movie.isWatched ? "Watched" : "Queued"}
-                  </span>
+                    {movie.isWatched ? "✅ Watched" : "👀 To Watch"}
+                  </button>
                 </div>
 
                 <p className="text-gray-400 text-sm line-clamp-3 mb-6">
                   {movie.description}
                 </p>
 
-                <div className="flex justify-between items-center pt-4 border-t border-gray-700/50">
-                  <div className="flex items-center space-x-1 text-yellow-500">
-                    <span>⭐</span>
-                    <span className="font-semibold">{movie.rating}</span>
-                    <span className="text-gray-600 text-xs">/ 10</span>
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    Added {new Date(movie.createdAt).toLocaleDateString()}
-                  </div>
+                <div className="flex items-center space-x-1 text-yellow-500 pt-4 border-t border-gray-700/50">
+                  <span>⭐</span>
+                  <span className="font-semibold">{movie.rating}</span>
+                  <span className="text-gray-600 text-xs">/ 10</span>
                 </div>
               </div>
             </div>
