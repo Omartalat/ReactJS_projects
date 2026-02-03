@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Movie from "../models/Movie.js";
+import { IMovie } from "../types/index.js";
 
 export async function getMovies(req: Request, res: Response): Promise<void> {
   try {
@@ -27,7 +28,36 @@ export async function addMovie(req: Request, res: Response): Promise<void> {
 
     const savedMovie = await newMovie.save();
     res.status(201).json(savedMovie);
-  } catch (error) {console.error(`Error: ${(error as Error).message}`)}
+  } catch (error) {
+    console.error(`Error: ${(error as Error).message}`);
+  }
+}
+
+
+export async function updateMovie(req: Request, res: Response): Promise<void> {
+  try {
+    const { movieId, title, description, rating } = req.body;
+
+    if (!movieId) {
+      res.status(400).json({ message: "Movie ID is required" });
+      return;
+    }
+
+    const updatedMovie = await Movie.findByIdAndUpdate(
+      movieId,
+      { title, description, rating },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedMovie) {
+      res.status(404).json({ message: "Movie not found" });
+      return;
+    }
+
+    res.status(200).json(updatedMovie);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error });
+  }
 }
 
 // export function getMovie(req: Request, res: Response) {

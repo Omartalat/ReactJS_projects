@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { type Movie } from "./types";
+import AddMovieModal from "./components/AddMovieModal"
 
 function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -23,6 +25,10 @@ function App() {
     fetchMovies();
   }, []);
 
+  const handleMovieAdded = (newMovie: Movie) => {
+    setMovies([newMovie, ...movies]);
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white p-8">
       <div className="max-w-5xl mx-auto">
@@ -30,12 +36,14 @@ function App() {
           <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
             🍿 My Watchlist
           </h1>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-medium transition-colors">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-medium transition-colors"
+          >
             + Add Movie
           </button>
         </div>
 
-        {/* Loading & Error States */}
         {loading && (
           <div className="text-center text-gray-400 animate-pulse mt-10">
             Loading your collection...
@@ -48,7 +56,6 @@ function App() {
           </div>
         )}
 
-        {/* Empty State */}
         {!loading && !error && movies.length === 0 && (
           <div className="text-center py-20 bg-gray-800/50 rounded-2xl border border-gray-700 border-dashed">
             <p className="text-xl text-gray-400">Your watchlist is empty.</p>
@@ -58,7 +65,6 @@ function App() {
           </div>
         )}
 
-        {/* Movie Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {movies.map((movie) => (
             <div
@@ -99,6 +105,11 @@ function App() {
             </div>
           ))}
         </div>
+        <AddMovieModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onMovieAdded={handleMovieAdded}
+        />
       </div>
     </div>
   );
