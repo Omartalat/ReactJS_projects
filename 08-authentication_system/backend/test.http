@@ -1,9 +1,25 @@
-### Register a User
-POST http://localhost:5000/api/auth/register
+### ... (Previous Login tests) ...
+
+### 5. Get Profile (BLOCKED)
+# Try this WITHOUT logging in (or after logging out). 
+# Should return 401 Not Authorized
+GET http://localhost:5000/api/auth/profile
+
+### 6. Get Profile (ALLOWED)
+# 1. Run the "Login" request above first.
+# 2. Then run this request immediately.
+# Should return your user info { name, email... }
+# If your client does not keep cookies, copy the jwt value
+# from the login response "Set-Cookie" header and paste it below.
+# Example: Cookie: jwt=YOUR_TOKEN
+# Cookie: jwt=
+GET http://localhost:5000/api/auth/profile
+
+### 2. Login (Should work with correct password)
+POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "password123"
+  "email": "jane@example.com",
+  "password": "secretpassword"
 }
